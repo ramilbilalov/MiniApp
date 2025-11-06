@@ -1,4 +1,7 @@
+@file:OptIn(ExperimentalDistributionDsl::class)
+
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalDistributionDsl
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -13,7 +16,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosArm64(),
         iosSimulatorArm64()
@@ -24,10 +27,14 @@ kotlin {
         }
     }
 
-    js {
+    js(IR) {
+        outputModuleName = "main"
         browser {
             commonWebpackConfig {
-                outputFileName = "miniapp.js" // имя JS-бандла
+                cssSupport {
+                    enabled.set(true)
+                }
+                outputFileName = "main.js"
             }
         }
         binaries.executable()
@@ -53,12 +60,14 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
-        val jsMain by getting {
-            dependencies {
-                implementation(compose.runtime)
-                implementation(compose.foundation)
-                implementation(compose.material3)
-            }
+        jsMain.dependencies {
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.material3)
+            implementation(compose.html.core)
+            implementation(compose.ui)
+            implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
         }
     }
 }
