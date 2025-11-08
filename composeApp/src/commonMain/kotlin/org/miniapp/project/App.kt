@@ -1,49 +1,104 @@
 package org.miniapp.project
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.material3.*
+import androidx.compose.foundation.layout.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
-
-import miniapp.composeapp.generated.resources.Res
-import miniapp.composeapp.generated.resources.compose_multiplatform
+import androidx.compose.ui.unit.dp
 
 @Composable
-@Preview
 fun App() {
+    var telegramData by remember { mutableStateOf<TelegramData?>(null) }
+
+    LaunchedEffect(Unit) {
+        // Инициализируем Telegram и получаем данные
+        telegramService.initTelegram()
+        telegramData = telegramService.getTelegramData()
+    }
+
     MaterialTheme {
-        var showContent by remember { mutableStateOf(false) }
-        Column(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.primaryContainer)
-                .safeContentPadding()
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
         ) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
-            }
-            AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Telegram Mini App",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                telegramData?.user?.let { user ->
+                    UserInfoCard(user)
+                } ?: run {
+                    Text("Loading Telegram data...")
+                }
+
+                telegramData?.let { data ->
+                    AppInfoCard(data)
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Button(
+                    onClick = {
+                        telegramService.closeApp()
+                    }
                 ) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
+                    Text("Close Mini App")
                 }
             }
+        }
+    }
+}
+
+// Остальные композейблы остаются без изменений
+@Composable
+fun UserInfoCard(user: TelegramUser) {
+    Card(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = "User Information",
+                style = MaterialTheme.typography.titleMedium
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text("ID: ${user.id ?: "N/A"}")
+            Text("Name: ${user.firstName ?: ""} ${user.lastName ?: ""}")
+            Text("Username: @${user.username ?: "N/A"}")
+            Text("Language: ${user.languageCode ?: "N/A"}")
+        }
+    }
+}
+
+@Composable
+fun AppInfoCard(data: TelegramData) {
+    Card(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = "App Information",
+                style = MaterialTheme.typography.titleMedium
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text("Platform: ${data.platform}")
+            Text("Theme: ${data.theme}")
+            Text("Start Param: ${data.startParam ?: "N/A"}")
         }
     }
 }

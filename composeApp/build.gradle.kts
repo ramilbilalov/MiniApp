@@ -1,4 +1,3 @@
-@file:OptIn(ExperimentalDistributionDsl::class)
 
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalDistributionDsl
@@ -16,25 +15,15 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-
-    listOf(
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "ComposeApp"
-            isStatic = true
-        }
-    }
-
     js(IR) {
-        outputModuleName = "main"
         browser {
+            outputModuleName = "MiniApp"
+
             commonWebpackConfig {
                 cssSupport {
                     enabled.set(true)
                 }
-                outputFileName = "main.js"
+                outputFileName = "MiniApp.js"
             }
         }
         binaries.executable()
@@ -102,4 +91,5 @@ android {
 dependencies {
     debugImplementation(compose.uiTooling)
 }
+
 
