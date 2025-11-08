@@ -42,6 +42,8 @@ fun App() {
             val data = telegramService.getTelegramData()
             addDebugLog("📱 Data received: ${true}")
             telegramData = data
+            addDebugLog("Data $telegramData")
+
         } catch (e: Exception) {
             addDebugLog("❌ Error: ${e.message}")
         }
