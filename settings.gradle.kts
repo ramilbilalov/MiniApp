@@ -1,4 +1,4 @@
-rootProject.name = "MiniApp"
+rootProject.name = "MiniApp5"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
