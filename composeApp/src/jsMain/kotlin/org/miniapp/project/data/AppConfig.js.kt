@@ -8,14 +8,15 @@ import kotlinx.browser.window
  *  • явный URL → используем его (полезно если фронт на одном хосте, бэк на другом).
  *  • не задано → fallback на localhost:8080 для разработки.
  */
+
 actual object AppConfig {
     actual val BACKEND_BASE_URL: String
         get() {
             val raw = window.asDynamic().BACKEND_URL as? String
             return when {
-                raw == null -> "http://localhost:8080"      // window.BACKEND_URL не задано
-                raw.isBlank() -> window.location.origin     // same-origin
-                else -> raw
+                raw == null -> "http://localhost:8080"   // dev: открыли html напрямую
+                raw.isBlank() -> window.location.origin  // prod: same-origin
+                else -> raw                              // явный URL (фронт и бэк на разных хостах)
             }
         }
 }
