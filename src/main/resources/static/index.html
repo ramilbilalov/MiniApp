@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eSIMobile</title>
+    <!-- В прод-сборке фронт и бэк живут на одном домене, поэтому пустая строка
+         означает "те же путь и хост, с которого пришла страница".
+         Для локального dev (jsBrowserDevelopmentRun) этот скрипт перезатри
+         или оставь пустым — клиент сам упадёт на http://localhost:8080. -->
+    <script>
+        window.BACKEND_URL = "";
+    </script>
+
+    <!-- Telegram WebApp должен загружаться первым -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Остальные скрипты с defer -->
+    <script src="skiko.js" defer></script>
+    <script type="application/javascript" src="composeApp.js"></script>
+    <script src="MiniApp13.js"></script>
+    <script>
+        // Telegram WebApp — настройка контейнера сразу после загрузки
+        if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
+            try { Telegram.WebApp.ready(); Telegram.WebApp.expand(); } catch (e) { console.warn(e); }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        #root {
+            width: 100vw;
+            height: 100vh;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script>
+    // Функция для получения Telegram данных
+    window.getTelegramData = function() {
+        if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
+            return {
+                initData: Telegram.WebApp.initData || 'no_init_data',
+                initDataUnsafe: Telegram.WebApp.initDataUnsafe ? JSON.stringify(Telegram.WebApp.initDataUnsafe) : '{}',
+                platform: Telegram.WebApp.platform || 'unknown',
+                version: Telegram.WebApp.version || 'unknown',
+                theme: Telegram.WebApp.colorScheme || 'light'
+            };
+        }
+        return null;
+    };
+</script>
+</body>
+</html>
