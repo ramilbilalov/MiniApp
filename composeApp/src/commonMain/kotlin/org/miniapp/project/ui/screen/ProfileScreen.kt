@@ -37,6 +37,7 @@ fun ProfileScreen(
     themeMode: AppThemeMode,
     onThemeChange: (AppThemeMode) -> Unit,
     onHelpClick: () -> Unit,
+    onLegalClick: () -> Unit,
 ) {
     val s = LocalStrings.current
     LazyColumn(
@@ -68,6 +69,7 @@ fun ProfileScreen(
             )
         }
         item { HelpCard(label = s.openHelp, onClick = onHelpClick) }
+        item { HelpCard(label = s.openLegal, onClick = onLegalClick) }
         item { SupportCard(s.supportTitle, s.supportText) }
     }
 }

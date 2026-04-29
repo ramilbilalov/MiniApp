@@ -37,10 +37,14 @@ import org.miniapp.project.ui.AppContainer
 import org.miniapp.project.ui.i18n.AppLanguage
 import org.miniapp.project.ui.i18n.LocalStrings
 import org.miniapp.project.ui.i18n.LocaleProvider
+import org.miniapp.project.legal.LegalDocs
 import org.miniapp.project.ui.screen.BundleDetailScreen
 import org.miniapp.project.ui.screen.CatalogScreen
 import org.miniapp.project.ui.screen.CountryScreen
+import org.miniapp.project.ui.screen.DocumentScreen
+import org.miniapp.project.ui.screen.FaqScreen
 import org.miniapp.project.ui.screen.HelpScreen
+import org.miniapp.project.ui.screen.LegalScreen
 import org.miniapp.project.ui.screen.MyEsimsScreen
 import org.miniapp.project.ui.screen.ProfileScreen
 import org.miniapp.project.ui.sheet.LanguageSheet
@@ -54,9 +58,14 @@ private object Routes {
     const val MY_ESIMS = "my_esims"
     const val PROFILE = "profile"
     const val HELP = "help"
+    const val LEGAL = "legal"
+    const val FAQ = "faq"
 
     const val COUNTRY = "country/{iso}"
     fun country(iso: String) = "country/$iso"
+
+    const val DOCUMENT = "document/{type}"
+    fun document(type: LegalDocs.Doc) = "document/${type.name}"
 
     const val BUNDLE_DETAIL = "bundle/{name}"
     fun bundleDetail(name: String) = "bundle/$name"
@@ -243,10 +252,27 @@ private fun MainScaffold(
                     themeMode = themeMode,
                     onThemeChange = onThemeChange,
                     onHelpClick = { navController.navigate(Routes.HELP) },
+                    onLegalClick = { navController.navigate(Routes.LEGAL) },
                 )
             }
             composable(Routes.HELP) {
                 HelpScreen(onBack = { navController.popBackStack() })
+            }
+            composable(Routes.LEGAL) {
+                LegalScreen(
+                    onBack = { navController.popBackStack() },
+                    onOpenDocument = { type -> navController.navigate(Routes.document(type)) },
+                    onOpenFaq = { navController.navigate(Routes.FAQ) },
+                )
+            }
+            composable(Routes.FAQ) {
+                FaqScreen(onBack = { navController.popBackStack() })
+            }
+            composable(Routes.DOCUMENT) { entry ->
+                val typeName = entry.arguments?.read { getString("type") }.orEmpty()
+                val doc = runCatching { LegalDocs.Doc.valueOf(typeName) }
+                    .getOrDefault(LegalDocs.Doc.PRIVACY)
+                DocumentScreen(doc = doc, onBack = { navController.popBackStack() })
             }
         }
     }

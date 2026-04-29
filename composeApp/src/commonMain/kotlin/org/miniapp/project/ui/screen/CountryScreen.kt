@@ -18,8 +18,11 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.animation.animateContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -215,11 +218,25 @@ private fun FiltersBlock(
     onReset: () -> Unit,
 ) {
     val s = LocalStrings.current
+    // По умолчанию фильтры свёрнуты — карточка занимает мало места,
+    // пользователь видит сразу список тарифов. Открываем по тапу.
+    var expanded by remember { mutableStateOf(false) }
+
+    // Считаем сколько фильтров активно — для бейджа в свёрнутом состоянии.
+    val activeCount = listOf(
+        price != PriceRange.ANY,
+        data != DataRange.ANY,
+        duration != DurationRange.ANY,
+        sort != SortBy.CHEAPEST,
+    ).count { it }
+
     GlassCard(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().animateContentSize(),
         shape = MaterialTheme.shapes.large,
+        onClick = { if (!expanded) expanded = true },
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
+            // Шапка: название + (опц. бейдж активных) + кнопка свернуть/развернуть
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     s.filtersTitle,
@@ -227,65 +244,95 @@ private fun FiltersBlock(
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.SemiBold,
                 )
+                if (activeCount > 0) {
+                    Spacer(Modifier.size(8.dp))
+                    Surface(
+                        shape = RoundedCornerShape(999.dp),
+                        color = MaterialTheme.colorScheme.primary,
+                    ) {
+                        Text(
+                            activeCount.toString(),
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            fontWeight = FontWeight.SemiBold,
+                        )
+                    }
+                }
                 Spacer(Modifier.weight(1f))
-                TextButton(onClick = onReset) { Text(s.filterReset) }
+                IconButton(onClick = { expanded = !expanded }) {
+                    Icon(
+                        if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
             }
-            Spacer(Modifier.size(8.dp))
 
-            FilterGroup(s.dataLabel) {
-                ChipRow(
-                    items = listOf(
-                        DataRange.ANY to s.priceAny,
-                        DataRange.UNDER_1GB to s.dataUnder1,
-                        DataRange.BETWEEN_1_5GB to s.data1to5,
-                        DataRange.BETWEEN_5_15GB to s.data5to15,
-                        DataRange.OVER_15GB to s.data15plus,
-                        DataRange.UNLIMITED to s.dataUnlimited,
-                    ),
-                    selected = data,
-                    onSelect = onData,
-                )
-            }
-            Spacer(Modifier.size(10.dp))
+            if (expanded) {
+                Spacer(Modifier.size(8.dp))
 
-            FilterGroup(s.durationLabel) {
-                ChipRow(
-                    items = listOf(
-                        DurationRange.ANY to s.priceAny,
-                        DurationRange.UNDER_7 to s.durationUnder7,
-                        DurationRange.BETWEEN_8_30 to s.duration8to30,
-                        DurationRange.OVER_30 to s.duration30plus,
-                    ),
-                    selected = duration,
-                    onSelect = onDuration,
-                )
-            }
-            Spacer(Modifier.size(10.dp))
+                FilterGroup(s.dataLabel) {
+                    ChipRow(
+                        items = listOf(
+                            DataRange.ANY to s.priceAny,
+                            DataRange.UNDER_1GB to s.dataUnder1,
+                            DataRange.BETWEEN_1_5GB to s.data1to5,
+                            DataRange.BETWEEN_5_15GB to s.data5to15,
+                            DataRange.OVER_15GB to s.data15plus,
+                            DataRange.UNLIMITED to s.dataUnlimited,
+                        ),
+                        selected = data,
+                        onSelect = onData,
+                    )
+                }
+                Spacer(Modifier.size(10.dp))
 
-            FilterGroup(s.priceFilter) {
-                ChipRow(
-                    items = listOf(
-                        PriceRange.ANY to s.priceAny,
-                        PriceRange.UNDER_5 to s.priceUnder5,
-                        PriceRange.BETWEEN_5_15 to s.price5to15,
-                        PriceRange.OVER_15 to s.price15plus,
-                    ),
-                    selected = price,
-                    onSelect = onPrice,
-                )
-            }
-            Spacer(Modifier.size(10.dp))
+                FilterGroup(s.durationLabel) {
+                    ChipRow(
+                        items = listOf(
+                            DurationRange.ANY to s.priceAny,
+                            DurationRange.UNDER_7 to s.durationUnder7,
+                            DurationRange.BETWEEN_8_30 to s.duration8to30,
+                            DurationRange.OVER_30 to s.duration30plus,
+                        ),
+                        selected = duration,
+                        onSelect = onDuration,
+                    )
+                }
+                Spacer(Modifier.size(10.dp))
 
-            FilterGroup(s.sortLabel) {
-                ChipRow(
-                    items = listOf(
-                        SortBy.CHEAPEST to s.sortCheapest,
-                        SortBy.MORE_DATA to s.sortMoreData,
-                        SortBy.LONGER to s.sortLonger,
-                    ),
-                    selected = sort,
-                    onSelect = onSort,
-                )
+                FilterGroup(s.priceFilter) {
+                    ChipRow(
+                        items = listOf(
+                            PriceRange.ANY to s.priceAny,
+                            PriceRange.UNDER_5 to s.priceUnder5,
+                            PriceRange.BETWEEN_5_15 to s.price5to15,
+                            PriceRange.OVER_15 to s.price15plus,
+                        ),
+                        selected = price,
+                        onSelect = onPrice,
+                    )
+                }
+                Spacer(Modifier.size(10.dp))
+
+                FilterGroup(s.sortLabel) {
+                    ChipRow(
+                        items = listOf(
+                            SortBy.CHEAPEST to s.sortCheapest,
+                            SortBy.MORE_DATA to s.sortMoreData,
+                            SortBy.LONGER to s.sortLonger,
+                        ),
+                        selected = sort,
+                        onSelect = onSort,
+                    )
+                }
+
+                // Reset — внизу справа карточки, видна только в развёрнутом виде.
+                Spacer(Modifier.size(12.dp))
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                    TextButton(onClick = onReset) { Text(s.filterReset) }
+                }
             }
         }
     }

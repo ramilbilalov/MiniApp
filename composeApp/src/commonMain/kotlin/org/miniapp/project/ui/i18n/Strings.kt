@@ -146,6 +146,21 @@ data class Strings(
     val checkCompatList: String,
     val openHelp: String,
 
+    // Legal & FAQ
+    val legalSection: String,                    // "Legal & FAQ"
+    val openLegal: String,                       // ссылка из ProfileScreen
+    val legalFaq: String,
+    val legalFaqSubtitle: String,
+    val legalPrivacy: String,
+    val legalPrivacySubtitle: String,
+    val legalTerms: String,
+    val legalTermsSubtitle: String,
+    val legalComplaints: String,
+    val legalComplaintsSubtitle: String,
+    val legalBugBounty: String,
+    val legalBugBountySubtitle: String,
+    val legalDisclaimer: String,                 // мелкий текст внизу
+
     // Misc
     val unlimited: String,
     val loading: String,
@@ -191,7 +206,7 @@ private val EnStrings = Strings(
     languageLabel = "Language",
     notInTelegram = "Running outside Telegram — sign-in unavailable.",
     supportTitle = "Support",
-    supportText = "For any questions, message our Telegram support bot.",
+    supportText = "For any questions, message us at @esimobilehelp.",
     chooseLanguage = "Choose language",
 
     themeLabel = "Theme",
@@ -259,6 +274,21 @@ private val EnStrings = Strings(
     checkCompatList = "Most iPhones from XS (2018) and modern Pixel / Galaxy / Xiaomi flagships support eSIM. US iPhones (14 and later) are eSIM-only.",
     openHelp = "How to install eSIM",
 
+    legalSection = "Legal & FAQ",
+    openLegal = "Legal & FAQ",
+    legalFaq = "Frequently asked questions",
+    legalFaqSubtitle = "eSIM basics, installation, troubleshooting",
+    legalPrivacy = "Privacy Policy",
+    legalPrivacySubtitle = "What data we collect and why",
+    legalTerms = "Terms and Conditions",
+    legalTermsSubtitle = "The rules of using eSIMobile",
+    legalComplaints = "Complaints Policy",
+    legalComplaintsSubtitle = "How to file a complaint",
+    legalBugBounty = "Bug Bounty Program",
+    legalBugBountySubtitle = "Help us keep the service safe",
+    legalDisclaimer = "eSIMobile is a private, non-commercial project. " +
+        "All documents are in English only.",
+
     unlimited = "∞ Unlimited",
     loading = "Loading…",
 )
@@ -303,7 +333,7 @@ private val RuStrings = Strings(
     languageLabel = "Язык",
     notInTelegram = "Запущено вне Telegram — вход недоступен.",
     supportTitle = "Поддержка",
-    supportText = "По вопросам пишите в Telegram-бот поддержки.",
+    supportText = "По любым вопросам пишите в Telegram: @esimobilehelp.",
     chooseLanguage = "Выберите язык",
 
     themeLabel = "Тема",
@@ -371,6 +401,21 @@ private val RuStrings = Strings(
     checkCompatList = "Большинство iPhone начиная с XS (2018) и современные Pixel / Galaxy / Xiaomi топовых линеек поддерживают eSIM. iPhone 14+ для США — только eSIM.",
     openHelp = "Как установить eSIM",
 
+    legalSection = "Документы и FAQ",
+    openLegal = "Документы и FAQ",
+    legalFaq = "Частые вопросы",
+    legalFaqSubtitle = "Об eSIM, установка, неполадки",
+    legalPrivacy = "Privacy Policy",
+    legalPrivacySubtitle = "Какие данные собираем и зачем",
+    legalTerms = "Terms and Conditions",
+    legalTermsSubtitle = "Правила использования eSIMobile",
+    legalComplaints = "Complaints Policy",
+    legalComplaintsSubtitle = "Как подать жалобу",
+    legalBugBounty = "Bug Bounty Program",
+    legalBugBountySubtitle = "Помогите сделать сервис безопаснее",
+    legalDisclaimer = "eSIMobile — частный некоммерческий проект. " +
+        "Сами документы доступны только на английском.",
+
     unlimited = "∞ Безлимит",
     loading = "Загрузка…",
 )
@@ -415,7 +460,7 @@ private val ZhStrings = Strings(
     languageLabel = "语言",
     notInTelegram = "在 Telegram 之外运行 — 无法登录。",
     supportTitle = "支持",
-    supportText = "如有任何问题，请联系我们的 Telegram 支持机器人。",
+    supportText = "如有任何问题，请通过 Telegram 联系 @esimobilehelp。",
     chooseLanguage = "选择语言",
 
     themeLabel = "主题",
@@ -483,6 +528,21 @@ private val ZhStrings = Strings(
     checkCompatList = "iPhone XS（2018）及以后机型、Pixel / Galaxy / Xiaomi 高端旗舰大多支持 eSIM。美版 iPhone 14 起仅支持 eSIM。",
     openHelp = "如何安装 eSIM",
 
+    legalSection = "条款和常见问题",
+    openLegal = "条款和常见问题",
+    legalFaq = "常见问题",
+    legalFaqSubtitle = "eSIM 基础、安装、故障排查",
+    legalPrivacy = "Privacy Policy",
+    legalPrivacySubtitle = "我们收集哪些数据以及为什么收集",
+    legalTerms = "Terms and Conditions",
+    legalTermsSubtitle = "使用 eSIMobile 的规则",
+    legalComplaints = "Complaints Policy",
+    legalComplaintsSubtitle = "如何提出投诉",
+    legalBugBounty = "Bug Bounty Program",
+    legalBugBountySubtitle = "协助提升服务安全性",
+    legalDisclaimer = "eSIMobile 是一个非商业的私人项目。" +
+        "所有文档仅提供英文版。",
+
     unlimited = "∞ 无限",
     loading = "加载中…",
 )
@@ -527,7 +587,7 @@ private val ArStrings = Strings(
     languageLabel = "اللغة",
     notInTelegram = "يعمل خارج Telegram — تسجيل الدخول غير متاح.",
     supportTitle = "الدعم",
-    supportText = "لأي استفسار، راسل بوت الدعم في Telegram.",
+    supportText = "لأي استفسار، راسلنا على Telegram: ‎@esimobilehelp.",
     chooseLanguage = "اختر اللغة",
 
     themeLabel = "السمة",
@@ -594,6 +654,21 @@ private val ArStrings = Strings(
     checkCompatAndroid = "Android: الإعدادات → حول الهاتف → الحالة → SIM / EID. أو اطلب *#06# — إن ظهر EID فإن eSIM مدعوم.",
     checkCompatList = "معظم iPhone من XS (2018) فما فوق، و Pixel / Galaxy / Xiaomi الحديثة تدعم eSIM. iPhone 14+ في الولايات المتحدة يستخدم eSIM فقط.",
     openHelp = "كيفية تثبيت eSIM",
+
+    legalSection = "المستندات والأسئلة الشائعة",
+    openLegal = "المستندات والأسئلة الشائعة",
+    legalFaq = "الأسئلة الشائعة",
+    legalFaqSubtitle = "أساسيات eSIM، التثبيت، استكشاف الأخطاء",
+    legalPrivacy = "Privacy Policy",
+    legalPrivacySubtitle = "البيانات التي نجمعها ولماذا",
+    legalTerms = "Terms and Conditions",
+    legalTermsSubtitle = "قواعد استخدام eSIMobile",
+    legalComplaints = "Complaints Policy",
+    legalComplaintsSubtitle = "كيفية تقديم شكوى",
+    legalBugBounty = "Bug Bounty Program",
+    legalBugBountySubtitle = "ساعدنا في الحفاظ على أمان الخدمة",
+    legalDisclaimer = "eSIMobile مشروع خاص غير تجاري. " +
+        "المستندات متاحة باللغة الإنجليزية فقط.",
 
     unlimited = "∞ غير محدود",
     loading = "جارٍ التحميل…",
