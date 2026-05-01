@@ -25,7 +25,12 @@ dl() {
         || curl -fsSL --globoff -o "$out" "$JSDELIVR/$path"
 }
 
-# Латиница + кириллица (RU/EN). Variable: оси wdth, wght.
+# Inter (основной шрифт UI). Variable: оси opsz, wght.
+# Покрывает Latin / Latin-Ext / Cyrillic / Cyrillic-Ext / Greek / Vietnamese.
+dl "Inter-Regular.ttf"           "inter/Inter%5Bopsz,wght%5D.ttf"
+
+# Латиница + кириллица fallback. Оставляем для совместимости (на случай,
+# если Inter не подгрузится). Variable: оси wdth, wght.
 dl "NotoSans-Regular.ttf"        "notosans/NotoSans%5Bwdth,wght%5D.ttf"
 
 # Арабский. Variable: wdth, wght.

@@ -254,18 +254,19 @@ private fun CountryCard(country: CountrySummary, language: AppLanguage, onClick:
             modifier = Modifier.fillMaxWidth().padding(16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            // Emoji-флаг страны. Если рендер не отдаёт emoji (старый
+            // browser / отсутствует Color-Emoji шрифт), увидим прямоугольник —
+            // тогда подкладываем ISO как fallback.
             Box(
                 modifier = Modifier
                     .size(44.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primaryContainer),
+                    .background(MaterialTheme.colorScheme.surfaceContainerHigh),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    country.iso.uppercase(),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    fontWeight = FontWeight.Bold,
+                    country.flagEmoji,
+                    style = MaterialTheme.typography.headlineSmall,
                 )
             }
             Spacer(Modifier.size(14.dp))

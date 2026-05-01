@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.miniapp.project.legal.LegalDocs
+import org.miniapp.project.ui.i18n.LocalAppLanguage
 import org.miniapp.project.ui.i18n.LocalStrings
 
 /**
@@ -40,14 +41,16 @@ import org.miniapp.project.ui.i18n.LocalStrings
 @Composable
 fun DocumentScreen(doc: LegalDocs.Doc, onBack: () -> Unit) {
     val s = LocalStrings.current
-    val text = remember(doc) { LegalDocs.textFor(doc) }
+    val language = LocalAppLanguage.current
+    val text = remember(doc, language) { LegalDocs.textFor(doc, language) }
+    val title = remember(doc, language) { LegalDocs.titleFor(doc, language) }
     val blocks = remember(text) { parseDocument(text) }
 
     Column(modifier = Modifier.fillMaxSize()) {
         CenterAlignedTopAppBar(
             title = {
                 Text(
-                    doc.titleEn,
+                    title,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
                 )

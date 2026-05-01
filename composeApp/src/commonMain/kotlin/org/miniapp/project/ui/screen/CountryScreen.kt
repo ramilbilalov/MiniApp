@@ -181,14 +181,12 @@ private fun Hero(iso: String, name: String) {
                 modifier = Modifier
                     .size(64.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primaryContainer),
+                    .background(MaterialTheme.colorScheme.surfaceContainerHigh),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    iso.uppercase(),
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    fontWeight = FontWeight.Bold,
+                    isoToFlag(iso),
+                    style = MaterialTheme.typography.displaySmall,
                 )
             }
             Spacer(Modifier.size(16.dp))

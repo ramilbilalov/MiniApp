@@ -74,40 +74,55 @@ val LightClaudeColors: ColorScheme = lightColorScheme(
     onErrorContainer = Color(0xFF5C1810),
 )
 
-val DarkClaudeColors: ColorScheme = darkColorScheme(
-    // На тёмном CTA — почти белый, для того же luminance-контраста
-    primary = Cream50,
-    onPrimary = Stone900,
-    primaryContainer = Stone700,
-    onPrimaryContainer = Cream50,
+// ─── Тёмная тема: «оникс» ──────────────────────────────────────
+// Глубокий тёплый чёрный с минимальной разницей светлоты между фоном
+// и карточками — карточки «плавают» на фоне без резкого outline.
+// Текст слегка кремовый (off-white), а не чисто-белый — мягче для глаз
+// при длительном чтении (особенно в Legal/FAQ).
+private val OnyxBg     = Color(0xFF0F0E0C)   // фон страницы — оникс
+private val OnyxSurf   = Color(0xFF18171A)   // карточка чуть выше фона (Δ ~7%)
+private val OnyxSurf2  = Color(0xFF1F1E20)   // surfaceVariant
+private val OnyxSurf3  = Color(0xFF26252A)   // surfaceContainerHigh
+private val OnyxSurf4  = Color(0xFF2D2C32)   // surfaceContainerHighest
+private val OnyxLow    = Color(0xFF0B0A09)   // ниже фона (under)
+private val OffWhite   = Color(0xFFE7E1D7)   // тёплый off-white (текст)
+private val MutedText  = Color(0xFF9A968D)   // приглушённый текст
 
-    secondary = Color(0xFFE08966),                 // мягче коралл на тёмном
-    onSecondary = Stone900,
-    secondaryContainer = Stone700,
+val DarkClaudeColors: ColorScheme = darkColorScheme(
+    // На тёмном CTA — off-white, не чисто-белый. Контраст всё ещё высокий,
+    // но не «выжигает» глаза.
+    primary = OffWhite,
+    onPrimary = OnyxBg,
+    primaryContainer = OnyxSurf3,
+    onPrimaryContainer = OffWhite,
+
+    secondary = Color(0xFFD9866A),                 // мягче коралл на онксе
+    onSecondary = OnyxBg,
+    secondaryContainer = OnyxSurf3,
     onSecondaryContainer = CoralSoft,
 
     tertiary = Color(0xFF8FAB9E),
-    onTertiary = Stone900,
+    onTertiary = OnyxBg,
 
-    background = Stone900,
-    onBackground = Cream50,
+    background = OnyxBg,
+    onBackground = OffWhite,
 
-    surface = Stone800,
-    onSurface = Cream50,
-    surfaceVariant = Stone700,
-    onSurfaceVariant = Stone400,
+    surface = OnyxSurf,
+    onSurface = OffWhite,
+    surfaceVariant = OnyxSurf2,
+    onSurfaceVariant = MutedText,
 
-    surfaceContainer = Color(0xFF26241F),
-    surfaceContainerHigh = Color(0xFF302D27),
-    surfaceContainerHighest = Color(0xFF3A372F),
-    surfaceContainerLow = Stone900,
-    surfaceContainerLowest = Color(0xFF181714),
+    surfaceContainer = OnyxSurf2,
+    surfaceContainerHigh = OnyxSurf3,
+    surfaceContainerHighest = OnyxSurf4,
+    surfaceContainerLow = OnyxBg,
+    surfaceContainerLowest = OnyxLow,
 
-    outline = Stone500,
-    outlineVariant = Stone800,
+    outline = Color(0xFF6E6A60),
+    outlineVariant = Color(0xFF2A2926),
 
-    error = Color(0xFFE06A60),
-    onError = Color.White,
-    errorContainer = Color(0xFF5C1810),
-    onErrorContainer = Color(0xFFFADBD8),
+    error = Color(0xFFD9685E),                     // приглушённее, без неона
+    onError = OnyxBg,
+    errorContainer = Color(0xFF3A1410),
+    onErrorContainer = Color(0xFFF2C8C2),
 )

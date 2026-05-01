@@ -46,12 +46,15 @@ internal val LightGlass = GlassColors(
 )
 
 internal val DarkGlass = GlassColors(
-    pageBase       = Color(0xFF181714),                            // глубокий тёплый чёрный
-    tintTopRight   = Color(0xFF5B4254).copy(alpha = 0.45f),
-    tintBottomLeft = Color(0xFF2F3A50).copy(alpha = 0.40f),
-    cardFillTop    = Color.White.copy(alpha = 0.16f),              // на тёмном — карточки заметно светлее
-    cardFillBottom = Color.White.copy(alpha = 0.07f),
-    cardBorder     = Color.White.copy(alpha = 0.30f),
+    // Оникс: фон ровный и глубокий, карточки лишь чуть-чуть выше фона
+    // (Δ светлоты маленькая → нет резкого "обреза" вокруг карточки).
+    // Тинты в углах едва заметные, чтобы не было ощущения «дискотеки» на тёмном.
+    pageBase       = Color(0xFF0F0E0C),
+    tintTopRight   = Color(0xFF3D2C36).copy(alpha = 0.22f),
+    tintBottomLeft = Color(0xFF24303F).copy(alpha = 0.20f),
+    cardFillTop    = Color.White.copy(alpha = 0.06f),
+    cardFillBottom = Color.White.copy(alpha = 0.025f),
+    cardBorder     = Color.White.copy(alpha = 0.10f),
 )
 
 val LocalGlassColors = staticCompositionLocalOf { LightGlass }

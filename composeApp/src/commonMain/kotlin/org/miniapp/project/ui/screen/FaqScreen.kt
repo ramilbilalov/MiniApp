@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.miniapp.project.legal.Faq
+import org.miniapp.project.ui.i18n.LocalAppLanguage
 import org.miniapp.project.ui.i18n.LocalStrings
 import org.miniapp.project.ui.theme.GlassCard
 
@@ -44,7 +45,8 @@ import org.miniapp.project.ui.theme.GlassCard
 @Composable
 fun FaqScreen(onBack: () -> Unit) {
     val s = LocalStrings.current
-    val groups = remember { Faq.groups }
+    val language = LocalAppLanguage.current
+    val groups = remember(language) { Faq.groupsFor(language) }
 
     Column(modifier = Modifier.fillMaxSize()) {
         CenterAlignedTopAppBar(
