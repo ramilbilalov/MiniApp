@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import org.miniapp.project.data.Bundle
 import org.miniapp.project.data.CatalogRepository
 import org.miniapp.project.ui.CountryNames
+import org.miniapp.project.ui.FlagImage
 import org.miniapp.project.ui.DataRange
 import org.miniapp.project.ui.DurationRange
 import org.miniapp.project.ui.Format
@@ -177,20 +178,7 @@ private fun Hero(iso: String, name: String) {
             modifier = Modifier.padding(20.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Box(
-                modifier = Modifier
-                    .size(64.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primaryContainer),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    iso.uppercase(),
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    fontWeight = FontWeight.Bold,
-                )
-            }
+            FlagImage(iso = iso, size = 64.dp)
             Spacer(Modifier.size(16.dp))
             Column(Modifier.weight(1f)) {
                 Text(

@@ -49,6 +49,7 @@ import org.miniapp.project.data.CatalogRepository
 import org.miniapp.project.data.TelegramUser
 import org.miniapp.project.ui.CatalogRegion
 import org.miniapp.project.ui.CountrySummary
+import org.miniapp.project.ui.FlagImage
 import org.miniapp.project.ui.byRegion
 import org.miniapp.project.ui.i18n.AppLanguage
 import org.miniapp.project.ui.i18n.LocalStrings
@@ -254,24 +255,10 @@ private fun CountryCard(country: CountrySummary, language: AppLanguage, onClick:
             modifier = Modifier.fillMaxWidth().padding(16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            // ISO-код страны в кружочке. Emoji-флаги отключены: Skiko на JS
-            // не имеет цветного emoji-шрифта, поэтому рендерил всё как .notdef.
-            // Если позже подключим Twemoji/Noto-Color-Emoji или PNG-сет —
-            // вернёмся к флагам.
-            Box(
-                modifier = Modifier
-                    .size(44.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primaryContainer),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    country.iso.uppercase(),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    fontWeight = FontWeight.Bold,
-                )
-            }
+            // PNG-флаг от Twemoji (см. ui/FlagImage.kt + composeApp/fetch-flags.sh).
+            // Кэшируется в памяти, так что одна и та же страна декодируется
+            // только один раз, даже если карточка рендерится много раз.
+            FlagImage(iso = country.iso, size = 44.dp)
             Spacer(Modifier.size(14.dp))
             Column(Modifier.weight(1f)) {
                 Text(
