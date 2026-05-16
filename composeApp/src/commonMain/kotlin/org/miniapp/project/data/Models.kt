@@ -10,6 +10,16 @@ data class AuthRequest(val initData: String)
 data class AuthResponse(val token: String, val user: TelegramUser)
 
 @Serializable
+data class GuestAuthRequest(val guestId: String? = null)
+
+@Serializable
+data class GuestAuthResponse(
+    val token: String,
+    val guestId: String,
+    val user: TelegramUser,
+)
+
+@Serializable
 data class TelegramUser(
     val id: Long,
     val first_name: String?,
@@ -40,6 +50,8 @@ data class Bundle(
     val price: Double = 0.0,
     val currency: String = "USD",
     val imageUrl: String? = null,
+    /** Источник тарифа: "esimgo" / "esimcard". В UI не показываем. */
+    val source: String = "esimgo",
 )
 
 @Serializable
@@ -54,6 +66,30 @@ data class CreateOrderRequest(
     val bundleName: String,
     val quantity: Int = 1,
     val paymentToken: String? = null,
+)
+
+@Serializable
+data class CheckoutRequest(
+    val bundleName: String,
+    val quantity: Int = 1,
+    /** "rollypay" | "stars" */
+    val gateway: String,
+)
+
+@Serializable
+data class CheckoutResponse(
+    val orderId: String,
+    val payUrl: String,
+    val gateway: String,
+    val expiresAt: Long? = null,
+)
+
+@Serializable
+data class OrderStatusResponse(
+    val orderId: String,
+    /** "pending" | "paid" | "failed" | "expired" | "refunded" */
+    val status: String,
+    val esim: EsimInfo? = null,
 )
 
 @Serializable

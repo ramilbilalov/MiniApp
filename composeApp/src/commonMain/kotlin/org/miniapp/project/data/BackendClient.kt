@@ -61,6 +61,22 @@ class BackendClient(
         return resp.body<AuthResponse>().also { setToken(it.token) }
     }
 
+    /**
+     * Гостевая авторизация для пользователей, открывших приложение вне
+     * Telegram. Бэк выдаёт JWT с guest_<uuid> в claim "id".
+     *
+     * @param savedGuestId UUID, который клиент уже сохранил в локальном
+     *        хранилище. Если null — бэк сгенерирует новый и вернёт его.
+     */
+    suspend fun authGuest(savedGuestId: String?): GuestAuthResponse {
+        val resp = http.post("auth/guest") {
+            contentType(ContentType.Application.Json)
+            setBody(GuestAuthRequest(guestId = savedGuestId))
+        }
+        ensureOk(resp)
+        return resp.body<GuestAuthResponse>().also { setToken(it.token) }
+    }
+
     // ─── Catalogue ────────────────────────────────────────────
     suspend fun getCatalogue(
         countries: List<String> = emptyList(),
@@ -83,11 +99,27 @@ class BackendClient(
     }
 
     // ─── Orders ───────────────────────────────────────────────
-    suspend fun createOrder(req: CreateOrderRequest): CreateOrderResponse {
-        val resp = http.post("api/orders") {
+
+    /**
+     * Старт оплаты через платёжный шлюз. Возвращает `payUrl` — фронт открывает
+     * его в браузере (для гостей) или через Telegram.WebApp.openLink
+     * (в Mini App).
+     */
+    suspend fun startCheckout(req: CheckoutRequest): CheckoutResponse {
+        val resp = http.post("api/orders/checkout") {
             contentType(ContentType.Application.Json)
             setBody(req)
         }
+        ensureOk(resp)
+        return resp.body()
+    }
+
+    /**
+     * Опрос статуса заказа после возврата с pay_url. Фронт дёргает раз в
+     * 2-3 секунды до момента когда status == "paid" и появилась `esim`.
+     */
+    suspend fun getOrderStatus(orderId: String): OrderStatusResponse {
+        val resp = http.get("api/orders/$orderId/status")
         ensureOk(resp)
         return resp.body()
     }

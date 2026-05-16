@@ -92,7 +92,13 @@ fun App() {
         // (не "browser" / "unknown" из fallback-объекта).
         inTelegram = raw?.platform?.let { it != "browser" && it != "unknown" && it != "android_dev" } == true
         try {
-            session = container.auth.signInWithTelegram()
+            // В Telegram — авторизуемся через initData (HMAC).
+            // Вне Telegram — гостевая сессия с UUID из localStorage.
+            session = if (inTelegram) {
+                container.auth.signInWithTelegram()
+            } else {
+                container.auth.signInAsGuest()
+            }
             session?.user?.languageCode?.let { language = AppLanguage.fromCode(it) }
         } catch (e: Throwable) {
             authError = e.message ?: "Auth failed"

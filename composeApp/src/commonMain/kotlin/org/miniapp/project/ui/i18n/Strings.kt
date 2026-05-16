@@ -109,8 +109,13 @@ data class Strings(
     val choosePayment: String,
     val payTelegramStars: String,
     val payCard: String,
+    val payCardSubtitle: String,                // "SBP / Russian bank card"
     val payCrypto: String,
     val paymentSoon: String,                    // "Coming soon"
+    val paymentStarting: String,                // "Opening payment page…"
+    val paymentWaiting: String,                 // "Waiting for payment confirmation"
+    val paymentSuccess: String,                 // "Payment confirmed!"
+    val paymentFailed: String,                  // "Payment failed"
 
     // Smart filters
     val filtersTitle: String,
@@ -238,9 +243,14 @@ private val EnStrings = Strings(
     continueToPayment = "Continue to payment",
     choosePayment = "Choose payment method",
     payTelegramStars = "Telegram Stars",
-    payCard = "Bank card",
+    payCard = "Bank card / SBP",
+    payCardSubtitle = "Russian banks · Sberbank, Tinkoff, Alfa, etc.",
     payCrypto = "Crypto",
     paymentSoon = "Coming soon",
+    paymentStarting = "Opening payment page…",
+    paymentWaiting = "Waiting for payment confirmation",
+    paymentSuccess = "Payment confirmed!",
+    paymentFailed = "Payment failed",
 
     filtersTitle = "Filters",
     filterReset = "Reset",
@@ -365,9 +375,14 @@ private val RuStrings = Strings(
     continueToPayment = "Перейти к оплате",
     choosePayment = "Способ оплаты",
     payTelegramStars = "Telegram Stars",
-    payCard = "Банковская карта",
+    payCard = "Карта / СБП",
+    payCardSubtitle = "Сбер, Тинькофф, Альфа и другие",
     payCrypto = "Криптовалюта",
     paymentSoon = "Скоро",
+    paymentStarting = "Открываем страницу оплаты…",
+    paymentWaiting = "Ожидаем подтверждения оплаты",
+    paymentSuccess = "Оплата подтверждена!",
+    paymentFailed = "Оплата не прошла",
 
     filtersTitle = "Фильтры",
     filterReset = "Сбросить",
@@ -492,9 +507,14 @@ private val ZhStrings = Strings(
     continueToPayment = "继续支付",
     choosePayment = "选择支付方式",
     payTelegramStars = "Telegram Stars",
-    payCard = "银行卡",
+    payCard = "银行卡 / SBP",
+    payCardSubtitle = "俄罗斯银行 · Sberbank、Tinkoff 等",
     payCrypto = "加密货币",
     paymentSoon = "即将推出",
+    paymentStarting = "正在打开支付页面…",
+    paymentWaiting = "等待支付确认",
+    paymentSuccess = "支付已确认！",
+    paymentFailed = "支付失败",
 
     filtersTitle = "筛选",
     filterReset = "重置",
@@ -619,9 +639,14 @@ private val ArStrings = Strings(
     continueToPayment = "متابعة إلى الدفع",
     choosePayment = "اختر طريقة الدفع",
     payTelegramStars = "Telegram Stars",
-    payCard = "بطاقة مصرفية",
+    payCard = "بطاقة مصرفية / SBP",
+    payCardSubtitle = "بنوك روسية · Sberbank، Tinkoff، إلخ",
     payCrypto = "عملة مشفرة",
     paymentSoon = "قريبًا",
+    paymentStarting = "جارٍ فتح صفحة الدفع…",
+    paymentWaiting = "في انتظار تأكيد الدفع",
+    paymentSuccess = "تم تأكيد الدفع!",
+    paymentFailed = "فشل الدفع",
 
     filtersTitle = "الفلاتر",
     filterReset = "إعادة ضبط",

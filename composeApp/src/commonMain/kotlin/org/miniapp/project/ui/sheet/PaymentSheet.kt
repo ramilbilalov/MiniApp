@@ -30,7 +30,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.miniapp.project.ui.i18n.LocalStrings
 
-enum class PaymentMethod { TELEGRAM_STARS, CARD, CRYPTO }
+/**
+ * Доступные способы оплаты в UI.
+ *
+ *  • TELEGRAM_STARS — только в Telegram Mini App, оплата через @wallet.
+ *  • CARD — российские банковские карты + СБП через RollyPay (для всех:
+ *    и для гостей в браузере, и для Telegram-юзеров).
+ *
+ *  Crypto убран: ИП РФ не может принимать крипту напрямую (259-ФЗ).
+ */
+enum class PaymentMethod { TELEGRAM_STARS, CARD }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,20 +80,14 @@ fun PaymentSheet(
                 )
                 Spacer(Modifier.height(8.dp))
             }
+            // Банковская карта / СБП через RollyPay — доступно всем
+            // (гостям в браузере и Telegram-юзерам).
             PayRow(
                 method = PaymentMethod.CARD,
                 title = s.payCard,
-                subtitle = s.paymentSoon,
+                subtitle = s.payCardSubtitle,
                 enabled = !purchasing,
                 onClick = { onPick(PaymentMethod.CARD) },
-            )
-            Spacer(Modifier.height(8.dp))
-            PayRow(
-                method = PaymentMethod.CRYPTO,
-                title = s.payCrypto,
-                subtitle = s.paymentSoon,
-                enabled = !purchasing,
-                onClick = { onPick(PaymentMethod.CRYPTO) },
             )
 
             if (purchasing) {
@@ -145,13 +148,7 @@ private fun PayRow(
                         modifier = Modifier.size(22.dp),
                     )
                     PaymentMethod.CARD -> Text(
-                        "CARD",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        fontWeight = FontWeight.Bold,
-                    )
-                    PaymentMethod.CRYPTO -> Text(
-                        "BTC",
+                        "СБП",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                         fontWeight = FontWeight.Bold,

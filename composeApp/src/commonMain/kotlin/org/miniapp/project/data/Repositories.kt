@@ -8,9 +8,26 @@ class AuthRepository(
     private val backend: BackendClient,
     private val telegramService: TelegramService,
 ) {
+    /**
+     * Авторизация через Telegram Mini App (когда фронт открыт внутри Telegram).
+     */
     suspend fun signInWithTelegram(): AuthResponse {
         val raw = telegramService.getTelegramRawData()
         return backend.authTelegram(raw.initData)
+    }
+
+    /**
+     * Гостевая авторизация для пользователей вне Telegram. Берём из локального
+     * хранилища UUID (если есть) и шлём бэку. Бэк возвращает токен и
+     * подтверждённый guestId — кладём его в хранилище, чтобы при следующем
+     * запуске пользователь увидел свою историю заказов.
+     */
+    suspend fun signInAsGuest(): AuthResponse {
+        val saved = GuestStore.loadGuestId()
+        val resp = backend.authGuest(saved)
+        // Если бэк вернул новый UUID (например saved был invalid) — обновляем.
+        if (saved != resp.guestId) GuestStore.saveGuestId(resp.guestId)
+        return AuthResponse(token = resp.token, user = resp.user)
     }
 
     fun isAuthenticated() = backend.token() != null
@@ -100,8 +117,14 @@ class CatalogRepository(private val backend: BackendClient) {
 }
 
 class OrdersRepository(private val backend: BackendClient) {
-    suspend fun createOrder(bundleName: String, quantity: Int = 1) =
-        backend.createOrder(CreateOrderRequest(bundleName = bundleName, quantity = quantity))
+    /** Старт оплаты через платёжный шлюз. Возвращает pay_url для редиректа. */
+    suspend fun startCheckout(bundleName: String, gateway: String, quantity: Int = 1) =
+        backend.startCheckout(
+            CheckoutRequest(bundleName = bundleName, quantity = quantity, gateway = gateway)
+        )
+
+    /** Опрос статуса заказа после возврата с pay_url. */
+    suspend fun checkStatus(orderId: String) = backend.getOrderStatus(orderId)
 }
 
 class EsimsRepository(private val backend: BackendClient) {

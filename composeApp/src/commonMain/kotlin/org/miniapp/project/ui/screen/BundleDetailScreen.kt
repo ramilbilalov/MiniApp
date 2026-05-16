@@ -40,13 +40,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.miniapp.project.data.Bundle
 import org.miniapp.project.data.CatalogRepository
 import org.miniapp.project.data.OrdersRepository
+import org.miniapp.project.openExternalUrl
 import org.miniapp.project.ui.Format
 import org.miniapp.project.ui.i18n.LocalStrings
 import org.miniapp.project.ui.isoToFlag
+import org.miniapp.project.ui.sheet.PaymentMethod
 import org.miniapp.project.ui.sheet.PaymentSheet
 import org.miniapp.project.ui.theme.GlassCard
 import androidx.compose.ui.graphics.Color
@@ -110,23 +113,75 @@ fun BundleDetailScreen(
             purchasing = purchasing,
             purchaseError = purchaseError,
             inTelegram = inTelegram,
-            onPick = {
-                purchasing = true
+            onPick = { method ->
                 purchaseError = null
-                scope.launch {
-                    try {
-                        orders.createOrder(bundle!!.name)
-                        purchasing = false
-                        showPaymentSheet = false
-                        onPurchased()
-                    } catch (e: Throwable) {
-                        purchaseError = e.message
-                        purchasing = false
+                when (method) {
+                    PaymentMethod.CARD -> {
+                        // Старт оплаты через RollyPay: backend создаёт платёж,
+                        // возвращает pay_url, мы открываем его в браузере и
+                        // параллельно начинаем опрос статуса заказа.
+                        scope.launch {
+                            purchasing = true
+                            try {
+                                val checkout = orders.startCheckout(
+                                    bundleName = bundle!!.name,
+                                    gateway = "rollypay",
+                                )
+                                openExternalUrl(checkout.payUrl)
+                                pollOrderStatus(
+                                    orders = orders,
+                                    orderId = checkout.orderId,
+                                    onPaid = {
+                                        purchasing = false
+                                        showPaymentSheet = false
+                                        onPurchased()
+                                    },
+                                    onFailed = { reason ->
+                                        purchasing = false
+                                        purchaseError = reason
+                                    },
+                                )
+                            } catch (e: Throwable) {
+                                purchasing = false
+                                purchaseError = e.message ?: s.paymentFailed
+                            }
+                        }
+                    }
+                    PaymentMethod.TELEGRAM_STARS -> {
+                        // TODO: подключить Telegram Stars через WebApp.openInvoice.
+                        // Пока — заглушка, чтобы было ясно что метод виден но
+                        // ещё не работает.
+                        purchaseError = s.paymentSoon
                     }
                 }
             },
             onDismiss = { if (!purchasing) showPaymentSheet = false },
         )
+    }
+}
+
+/**
+ * Опрос статуса заказа после редиректа на pay_url. Делаем до 3 минут
+ * с интервалом 3 секунды. Если за это время не пришло «paid» —
+ * пользователь просто остаётся на экране, eSIM появится в "Мои eSIM"
+ * когда сервер обработает webhook.
+ */
+private suspend fun pollOrderStatus(
+    orders: OrdersRepository,
+    orderId: String,
+    onPaid: () -> Unit,
+    onFailed: (String) -> Unit,
+) {
+    val maxAttempts = 60
+    repeat(maxAttempts) {
+        delay(3000)
+        val resp = runCatching { orders.checkStatus(orderId) }.getOrNull() ?: return@repeat
+        when (resp.status) {
+            "paid"     -> { onPaid(); return }
+            "failed",
+            "expired"  -> { onFailed(resp.status); return }
+            // "pending", "refunded" и прочее — продолжаем ждать
+        }
     }
 }
 
